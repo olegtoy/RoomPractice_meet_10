@@ -1,7 +1,6 @@
 package com.practice.olegtojgildin.roompractice_meet_10;
 
 import android.annotation.SuppressLint;
-import android.arch.persistence.room.Database;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.practice.olegtojgildin.roompractice_meet_10.data.Note;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NoteDAO;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NotesDatabase;
+import com.practice.olegtojgildin.roompractice_meet_10.data.SettingDataStore;
 
 /**
  * Created by olegtojgildin on 22/01/2019.
@@ -75,14 +79,28 @@ public class ReadNoteActivity extends AppCompatActivity {
         changeNote = findViewById(R.id.changeNote);
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void initNote() {
-        NotesDatabase db = App.getInstance().getDatabase();
-        NoteDAO noteDAO = db.getNoteDAO();
-        Note newNote = noteDAO.getNote(getIntent().getStringExtra(NotesDatabase.TITLE));
-        if (newNote.getTitle() != null && newNote.getText_note() != null) {
-            titleNote.setText(newNote.getTitle());
-            textNote.setText(newNote.getText_note());
-        }
+        new AsyncTask<String,Void ,Void>(){
+            Note newNote;
+            @Override
+            protected Void doInBackground(String... strings) {
+                NotesDatabase db = App.getInstance().getDatabase();
+                NoteDAO noteDAO = db.getNoteDAO();
+                newNote = noteDAO.getNote(strings[0]);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (newNote.getTitle() != null && newNote.getText_note() != null) {
+                    titleNote.setText(newNote.getTitle());
+                    textNote.setText(newNote.getText_note());
+                }
+            }
+        }.execute(getIntent().getStringExtra(NotesDatabase.TITLE));
+
+
     }
 
     public static final Intent newIntent(Context context) {

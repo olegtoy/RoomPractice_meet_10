@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.practice.olegtojgildin.roompractice_meet_10.data.SettingDataStore;
+
 /**
  * Created by olegtojgildin on 22/01/2019.
  */

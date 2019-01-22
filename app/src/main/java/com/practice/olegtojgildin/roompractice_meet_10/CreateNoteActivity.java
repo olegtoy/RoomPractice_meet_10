@@ -2,10 +2,8 @@ package com.practice.olegtojgildin.roompractice_meet_10;
 
 
 import android.annotation.SuppressLint;
-import android.app.AppComponentFactory;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.practice.olegtojgildin.roompractice_meet_10.data.Note;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NoteDAO;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NotesDatabase;
 
 
 public class CreateNoteActivity extends AppCompatActivity {

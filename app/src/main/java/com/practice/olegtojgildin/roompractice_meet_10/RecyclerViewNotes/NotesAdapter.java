@@ -1,18 +1,22 @@
-package com.practice.olegtojgildin.roompractice_meet_10;
+package com.practice.olegtojgildin.roompractice_meet_10.RecyclerViewNotes;
 
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.practice.olegtojgildin.roompractice_meet_10.App;
+import com.practice.olegtojgildin.roompractice_meet_10.R;
+import com.practice.olegtojgildin.roompractice_meet_10.data.Note;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NoteDAO;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NotesDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,15 +65,22 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     @Override
     public void onViewSwiped(int position) {
 
-        NotesDatabase db = App.getInstance().getDatabase();
-        NoteDAO noteDAO = db.getNoteDAO();
-        mNote=noteDAO.getAllNotes();
-        if (position < mNote.size()) {
-            Note noteForRemove = mNote.get(position);
+        new AsyncTask<Integer,Void,Void>(){
 
-            noteDAO.deleteNote(noteForRemove);
-            mNote.remove(position);
-        }
+            @Override
+            protected Void doInBackground(Integer... integers) {
+                NotesDatabase db = App.getInstance().getDatabase();
+                NoteDAO noteDAO = db.getNoteDAO();
+                mNote=noteDAO.getAllNotes();
+                if (integers[0] < mNote.size()) {
+                    Note noteForRemove = mNote.get(integers[0]);
+                    noteDAO.deleteNote(noteForRemove);
+                    mNote.remove(integers[0]);
+                }
+                return null;
+            }
+
+        }.execute(position);
 
         notifyDataSetChanged();
         notifyItemRemoved(position);

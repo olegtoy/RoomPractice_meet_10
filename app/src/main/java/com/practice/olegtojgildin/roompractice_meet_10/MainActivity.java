@@ -9,11 +9,16 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
+import com.practice.olegtojgildin.roompractice_meet_10.RecyclerViewNotes.ItemOffsetDecoration;
+import com.practice.olegtojgildin.roompractice_meet_10.RecyclerViewNotes.MyItemTouchHelper;
+import com.practice.olegtojgildin.roompractice_meet_10.RecyclerViewNotes.NotesAdapter;
+import com.practice.olegtojgildin.roompractice_meet_10.data.Note;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NoteDAO;
+import com.practice.olegtojgildin.roompractice_meet_10.data.NotesDatabase;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNoteListener {
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
     private ItemTouchHelper itemTouchHelper;
     public static final int REQUEST_CODE = 1;
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,17 +43,30 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
         mManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mManager);
 
-        NotesDatabase db = App.getInstance().getDatabase();
-        NoteDAO noteDAO = db.getNoteDAO();
-        mNote=noteDAO.getAllNotes();
-        List<Note> allNotes = noteDAO.getAllNotes();
+        new AsyncTask<Void,Void,Void>(){
 
-        mAdapter = new NotesAdapter(mNote, this, MainActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
-        myItemTouchHelper = new MyItemTouchHelper((MyItemTouchHelper.ItemTouchHelperAdapter) mAdapter);
-        itemTouchHelper = new ItemTouchHelper(myItemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
-        mRecyclerView.addItemDecoration(new ItemOffsetDecoration(20));
+            @Override
+            protected Void doInBackground(Void... voids) {
+                NotesDatabase db = App.getInstance().getDatabase();
+                NoteDAO noteDAO = db.getNoteDAO();
+                mNote=noteDAO.getAllNotes();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mAdapter = new NotesAdapter(mNote, MainActivity.this, MainActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
+                myItemTouchHelper = new MyItemTouchHelper((MyItemTouchHelper.ItemTouchHelperAdapter) mAdapter);
+                itemTouchHelper = new ItemTouchHelper(myItemTouchHelper);
+                itemTouchHelper.attachToRecyclerView(mRecyclerView);
+                mRecyclerView.addItemDecoration(new ItemOffsetDecoration(20));
+            }
+        }.execute();
+
+
+
+
     }
 
 
@@ -72,13 +91,24 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        NotesDatabase db = App.getInstance().getDatabase();
-        NoteDAO noteDAO = db.getNoteDAO();
-        mNote=noteDAO.getAllNotes();
-        mAdapter = new NotesAdapter(mNote, this, MainActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                NotesDatabase db = App.getInstance().getDatabase();
+                NoteDAO noteDAO = db.getNoteDAO();
+                mNote=noteDAO.getAllNotes();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mAdapter = new NotesAdapter(mNote, MainActivity.this, MainActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }.execute();
     }
 
     @Override

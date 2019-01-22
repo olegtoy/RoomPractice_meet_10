@@ -1,4 +1,4 @@
-package com.practice.olegtojgildin.roompractice_meet_10;
+package com.practice.olegtojgildin.roompractice_meet_10.RecyclerViewNotes;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

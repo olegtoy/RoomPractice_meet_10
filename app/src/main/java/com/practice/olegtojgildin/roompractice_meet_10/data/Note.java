@@ -1,4 +1,4 @@
-package com.practice.olegtojgildin.roompractice_meet_10;
+package com.practice.olegtojgildin.roompractice_meet_10.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

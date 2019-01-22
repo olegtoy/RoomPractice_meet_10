@@ -1,4 +1,4 @@
-package com.practice.olegtojgildin.roompractice_meet_10;
+package com.practice.olegtojgildin.roompractice_meet_10.data;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
@@ -14,5 +14,5 @@ public abstract class NotesDatabase extends RoomDatabase {
     public static final String TITLE="title";
     public static final String ID="id";
     public static final String TEXT_NOTE="text_note";
-    public abstract  NoteDAO getNoteDAO();
+    public abstract NoteDAO getNoteDAO();
 }
